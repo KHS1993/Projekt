@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <title>Gratis Parkeringar i Burlöv</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 100vh; /* gör så att kartan fyller hela sidan */
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h2>Gratis parkeringar i Burlöv</h2>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Starta kartan
+    var map = L.map('map').setView([55.642, 13.083], 14);
+
+    // Lägg till OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Hämta parkeringar från JSON
+    fetch("parkeringar.json")
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(p => {
+          L.marker([p.lat, p.lng]).addTo(map)
+            .bindPopup("<b>" + p.namn + "</b><br>" +
+                       "Platser: " + p.platser + "<br>" +
+                       "Regler: " + p.tidsbegränsning);
+        });
+      });
+  </script>
+</body>
+</html>
